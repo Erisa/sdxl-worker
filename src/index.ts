@@ -15,7 +15,15 @@ export default {
 			prompt: params.get('prompt') ?? 'small black cat',
 		};
 
-		const response = await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', inputs);
+		let response: Uint8Array = new Uint8Array();
+
+		try {
+			response = await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', inputs);
+		} catch (e) {
+			if (e instanceof Error){
+				return new Response(e.name + '\n' + e.message + '\n' + e.stack)
+			}
+		}
 
 		ctx.waitUntil(env.R2.put(params.get('prompt') ?? 'small black cat' + '/' + request.headers.get('cf-ray') + '.png', response));
 
