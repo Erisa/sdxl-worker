@@ -20,8 +20,8 @@ export default {
 		try {
 			response = await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', inputs);
 		} catch (e) {
-			if (e instanceof Error){
-				return new Response(e.name + '\n' + e.message + '\n' + e.stack)
+			if (e instanceof Error) {
+				return new Response(e.name + '\n' + e.message + '\n' + e.stack, { status: 500 });
 			}
 		}
 
