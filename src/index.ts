@@ -25,7 +25,7 @@ export default {
 			}
 		}
 
-		ctx.waitUntil(env.R2.put(params.get('prompt') ?? 'small black cat' + '/' + request.headers.get('cf-ray') + '.png', response));
+		ctx.waitUntil(env.R2.put((params.get('prompt') ?? 'small black cat') + '/' + request.headers.get('cf-ray') + '.png', response));
 
 		return new Response(response, {
 			headers: {
