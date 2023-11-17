@@ -1,36 +1,41 @@
+import { Hono, Context } from 'hono'
 import { Ai } from '@cloudflare/ai';
 
-export interface Env {
-	AI: any;
-	R2: R2Bucket;
+import indexHtml from './public/index.html';
+
+type Bindings = {
+	AI: Ai
+  R2: R2Bucket
 }
 
-export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-		const ai = new Ai(env.AI);
-		const url = new URL(request.url);
-		const params = url.searchParams;
+const app = new Hono<{ Bindings: Bindings }>()
 
-		const inputs = {
-			prompt: params.get('prompt') ?? 'small black cat',
-		};
+app.get('/', async (c: Context) => {
+  c.header('Content-Type', 'text/html')
+  return c.body(indexHtml);
+});
 
-		let response: Uint8Array = new Uint8Array();
+app.post('/', async (c: Context) => {
+	const body = await c.req.json();
+	const ai = new Ai(c.env.AI);
 
-		try {
-			response = await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', inputs);
-		} catch (e) {
-			if (e instanceof Error) {
-				return new Response(e.name + '\n' + e.message + '\n' + e.stack, { status: 500 });
-			}
-		}
+  const inputs = {
+    prompt: body.prompt
+  };
 
-		ctx.waitUntil(env.R2.put((params.get('prompt') ?? 'small black cat') + '/' + request.headers.get('cf-ray') + '.png', response));
+	let response: Uint8Array = new Uint8Array();
 
-		return new Response(response, {
-			headers: {
-				'content-type': 'image/png',
-			},
-		});
-	},
-};
+  try {
+    response = await ai.run('@cf/stabilityai/stable-diffusion-xl-base-1.0', inputs);
+  } catch (error) {
+    return c.json({ error: "An error occurred" }, 500);
+  }
+  const key: string = c.req.header('cf-ray') + '.png';
+
+  c.executionCtx.waitUntil(c.env.R2.put(key, response));
+
+	c.header('Content-Type', 'image/png')
+	return c.body(response);
+});
+
+export default app;

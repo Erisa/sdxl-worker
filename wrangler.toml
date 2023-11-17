@@ -1,6 +1,6 @@
-name = "sdxl"
+name = "mecha-muse"
+compatibility_date = "2023-01-01"
 main = "src/index.ts"
-compatibility_date = "2023-10-30"
 
 [ai]
 binding = "AI" # i.e. available in your Worker on env.AI
