@@ -1,14 +1,14 @@
 {
-  "scripts": {
-    "dev": "wrangler dev --remote",
-    "deploy": "wrangler deploy"
-  },
-  "dependencies": {
-    "@cloudflare/ai": "^1.0.28",
-    "hono": "^3.10.0"
-  },
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230914.0",
-    "wrangler": "^3.15.0"
-  }
+	"scripts": {
+		"dev": "wrangler dev --remote",
+		"deploy": "wrangler deploy"
+	},
+	"dependencies": {
+		"@cloudflare/ai": "^1.0.52",
+		"hono": "^4.0.7"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20240222.0",
+		"wrangler": "^3.30.0"
+	}
 }

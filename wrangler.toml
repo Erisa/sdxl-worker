@@ -3,7 +3,7 @@ compatibility_date = "2023-01-01"
 main = "src/index.ts"
 
 [ai]
-binding = "AI" # i.e. available in your Worker on env.AI
+binding = "AI"
 
 [[r2_buckets]]
 binding = "R2"
