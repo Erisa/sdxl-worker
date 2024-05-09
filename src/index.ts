@@ -1,13 +1,11 @@
-import { Ai } from '@cloudflare/ai';
-
 export interface Env {
-	AI: any;
+	AI: Ai;
 	R2: R2Bucket;
 }
 
 export default {
 	async fetch(request: Request, env: Env, ctx: ExecutionContext) {
-		const ai = new Ai(env.AI);
+		const ai = env.AI;
 		const url = new URL(request.url);
 		const params = url.searchParams;
 
